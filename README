@@ -4,6 +4,8 @@ A RESTFul interface for calculating tide times for any date from 1970 onwards.  
 
 The times and heights produced by this software should not be used for navigation.
 
+You will need to unzip the xml.zip file in /src/main/resources/xml.
+
 To build and run use mvn spring-boot:run
 
 Endpoint examples are
