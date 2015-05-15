@@ -25,3 +25,9 @@ build/
 *.idea
 
 dependency-reduced-pom.xml
+
+**/constituents.xml
+**/stations.xml
+**/constituents.json
+**/stations.json
+
