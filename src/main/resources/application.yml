@@ -1,0 +1,8 @@
+application:
+  name: tides
+
+logging:
+    level:
+        es.tidetim: DEBUG
+        org.springframework: INFO
+
