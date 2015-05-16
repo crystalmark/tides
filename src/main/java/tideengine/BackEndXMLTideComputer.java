@@ -1,25 +1,25 @@
 package tideengine;
 
-import org.xml.sax.Attributes;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
-
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 
+import org.springframework.stereotype.Component;
+import org.xml.sax.Attributes;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
+
+@Component
 public class BackEndXMLTideComputer {
     public final static String ARCHIVE_STREAM = "/xml/xml.zip";
     public final static String CONSTITUENTS_ENTRY = "constituents.xml";
     public final static String STATIONS_ENTRY = "stations.xml";
-
-    private static boolean verbose = false;
 
     public static Constituents buildConstituents() throws Exception {
         SpeedConstituentFinder scf = new SpeedConstituentFinder();
@@ -54,7 +54,6 @@ public class BackEndXMLTideComputer {
     }
 
     public static List<TideStation> getStationData(Stations stations) throws Exception {
-        long before = System.currentTimeMillis();
         List<TideStation> stationData = new ArrayList<TideStation>();
         Set<String> keys = stations.getStations().keySet();
         for (String k : keys) {
@@ -64,8 +63,6 @@ public class BackEndXMLTideComputer {
                 ex.printStackTrace();
             }
         }
-        long after = System.currentTimeMillis();
-        if (verbose) System.out.println("Finding all the stations took " + Long.toString(after - before) + " ms");
 
         return stationData;
     }
@@ -84,10 +81,6 @@ public class BackEndXMLTideComputer {
             ex.printStackTrace();
         }
         return sf.getTideStation();
-    }
-
-    public static void setVerbose(boolean verbose) {
-        BackEndXMLTideComputer.verbose = verbose;
     }
 
     public static class StationFinder extends DefaultHandler {
@@ -117,7 +110,6 @@ public class BackEndXMLTideComputer {
         @Override
         public void startElement(String uri, String localName, String qName, Attributes attributes)
                 throws SAXException {
-//    super.startElement(uri, localName, qName, attributes);
             if (!foundStation && "station".equals(qName)) {
                 String name = attributes.getValue("name");
                 if (name.contains(this.stationName)) {
@@ -265,7 +257,6 @@ public class BackEndXMLTideComputer {
     }
 
     public static class DoneWithSiteException extends SAXException {
-        @SuppressWarnings("compatibility:4149777882983149063")
         public final static long serialVersionUID = 1L;
 
         public DoneWithSiteException(String s) {

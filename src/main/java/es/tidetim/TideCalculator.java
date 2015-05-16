@@ -1,14 +1,7 @@
 package es.tidetim;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
-import tideengine.BackEndTideComputer;
-import tideengine.Coefficient;
-import tideengine.TideStation;
-import tideengine.TideType;
-import tideengine.TideUtilities;
-import tideengine.TimedValue;
+import static tideengine.TideType.FALLING;
+import static tideengine.TideType.RISING;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -16,8 +9,16 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static tideengine.TideType.FALLING;
-import static tideengine.TideType.RISING;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
+
+import tideengine.BackEndTideComputer;
+import tideengine.Coefficient;
+import tideengine.TideStation;
+import tideengine.TideType;
+import tideengine.TideUtilities;
+import tideengine.TimedValue;
 
 @Component
 public class TideCalculator {
@@ -29,7 +30,6 @@ public class TideCalculator {
         List<TimedValue> tides = new LinkedList<>();
 
         BackEndTideComputer.connect();
-        BackEndTideComputer.setVerbose(false);
 
         TideType trend = null;
 

@@ -1,8 +1,22 @@
 package es.tidetim;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.List;
+
+import org.elasticsearch.action.admin.indices.create.CreateIndexRequestBuilder;
+import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsRequest;
+import org.elasticsearch.client.transport.TransportClient;
+import org.elasticsearch.common.settings.ImmutableSettings;
+import org.elasticsearch.common.settings.Settings;
+import org.elasticsearch.common.transport.InetSocketTransportAddress;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
@@ -11,81 +25,132 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import tideengine.BackEndTideComputer;
 import tideengine.Stations;
 import tideengine.TimedValue;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.List;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Controller
 @RequestMapping("/tides")
 public class TideService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(TideService.class);
+	private static final Logger LOG = LoggerFactory
+			.getLogger(TideService.class);
 
-    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+	private static final SimpleDateFormat dateFormat = new SimpleDateFormat(
+			"yyyyMMdd");
 
-    @Autowired
-    TideCalculator calculator;
+	@Value("${elasticsearch.cluster:crystalmark}")
+	private String cluster;
+	@Value("${elasticsearch.index:tides}")
+	private String indexName;
+	@Value("${elasticsearch.port:9300}")
+	private int port;
+	@Value("${elasticsearch.host:localhost}")
+	private String host;
 
-    @RequestMapping(value = "{location}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public
-    @ResponseBody
-    List<TimedValue> getTideHeightAtTimeAndPlace(@PathVariable("location") String location, @RequestParam(value = "date", required = false) String date) {
+	@Autowired
+	TideCalculator calculator;
 
-        LocalDate calendar = getDate(date);
+	@RequestMapping(value = "{location}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody List<TimedValue> getTideHeightAtTimeAndPlace(
+			@PathVariable("location") String location,
+			@RequestParam(value = "date", required = false) String date) {
 
+		LocalDate calendar = getDate(date);
 
-        try {
-            return calculator.getHighAndLowTides(location, calendar);
-        } catch (Exception e) {
-            LOG.error("Unable to find tide times for " + location, e);
-            return null;
-        }
-    }
+		try {
+			return calculator.getHighAndLowTides(location, calendar);
+		} catch (Exception e) {
+			LOG.error("Unable to find tide times for " + location, e);
+			return null;
+		}
+	}
 
-    private LocalDate getDate(String date) {
-        if (!StringUtils.isEmpty(date)) {
-            try {
-                return LocalDateTime.ofInstant(dateFormat.parse(date).toInstant(), ZoneId.systemDefault()).toLocalDate();
-            } catch (ParseException e) {
-                LOG.error("Unable to parse {} to date", date, e);
-            }
-        }
-        return LocalDate.now();
-    }
+	private LocalDate getDate(String date) {
+		if (!StringUtils.isEmpty(date)) {
+			try {
+				return LocalDateTime.ofInstant(
+						dateFormat.parse(date).toInstant(),
+						ZoneId.systemDefault()).toLocalDate();
+			} catch (ParseException e) {
+				LOG.error("Unable to parse {} to date", date, e);
+			}
+		}
+		return LocalDate.now();
+	}
 
-    @RequestMapping(value = "hourly/{location}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public
-    @ResponseBody
-    List<TimedValue> getTides(@PathVariable("location") String location, @RequestParam(value = "date", required = false) String date) {
+	@RequestMapping(value = "hourly/{location}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody List<TimedValue> getTides(
+			@PathVariable("location") String location,
+			@RequestParam(value = "date", required = false) String date) {
 
-        LocalDate calendar = getDate(date);
+		LocalDate calendar = getDate(date);
 
-        try {
-            return calculator.getTides(location, calendar, 60);
-        } catch (Exception e) {
-            LOG.error("Unable to find tide times for " + location, e);
-            return null;
-        }
-    }
+		try {
+			return calculator.getTides(location, calendar, 60);
+		} catch (Exception e) {
+			LOG.error("Unable to find tide times for " + location, e);
+			return null;
+		}
+	}
 
-    @RequestMapping(value = "stations", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public
-    @ResponseBody
-    Stations getStations() throws Exception {
+	@RequestMapping(value = "stations", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody Stations getStations() throws Exception {
 
-        try {
-            BackEndTideComputer.connect();
-            return BackEndTideComputer.getStations();
-        } finally {
-            BackEndTideComputer.disconnect();
-        }
-    }
+		try {
+			BackEndTideComputer.connect();
+			return BackEndTideComputer.getStations();
+		} finally {
+			BackEndTideComputer.disconnect();
+		}
+	}
 
+	@RequestMapping(value = "load", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody String load() throws Exception {
+		// Create Client
+		Settings settings = ImmutableSettings.settingsBuilder()
+				.put("cluster.name", cluster).build();
+		TransportClient tclient = new TransportClient(settings);
+		try {
+			final TransportClient client = tclient
+					.addTransportAddress(new InetSocketTransportAddress(host,
+							port));
+
+			final ObjectMapper mapper = new ObjectMapper();
+
+			boolean hasIndex = client.admin().indices()
+					.exists(new IndicesExistsRequest("indexName")).actionGet()
+					.isExists();
+
+//			if (!hasIndex) {
+//				CreateIndexRequestBuilder createIndexRequestBuilder = client
+//						.admin().indices().prepareCreate(indexName);
+//				createIndexRequestBuilder.execute().actionGet();
+//			}
+
+			getStations()
+					.getStations()
+					.values()
+					.stream()
+					.forEach(
+							station -> {
+								try {
+									client.prepareIndex(indexName, "station")
+											.setId(station.getFullName())
+											.setSource(
+													mapper.writeValueAsString(station))
+											.execute().actionGet();
+								} catch (Exception e) {
+									LOG.error("Unable to parse " + station, e);
+								}
+							});
+
+			return "yes";
+		} finally {
+			tclient.close();
+		}
+	}
 }

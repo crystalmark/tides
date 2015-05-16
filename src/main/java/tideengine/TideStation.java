@@ -1,122 +1,118 @@
 package tideengine;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 public class TideStation implements Serializable {
-    @SuppressWarnings("compatibility:388041214676602538")
-    private final static long serialVersionUID = 1L;
+	private final static long serialVersionUID = 1L;
 
-    public final static String METERS = "meters";
-    public final static String FEET = "feet";
-    public final static String KNOTS = "knots";
-    public final static String SQUARE_KNOTS = "knots^2";
+	public final static String METERS = "meters";
+	public final static String FEET = "feet";
+	public final static String KNOTS = "knots";
+	public final static String SQUARE_KNOTS = "knots^2";
 
-    private String fullName = "";
-    private List<String> nameParts = new ArrayList<String>();
-    private double latitude = 0D;
-    private double longitude = 0D;
-    private double baseHeight = 0D;
-    private String unit = "";
-    private String timeZone = "";
-    private String timeOffset = "";
-    private List<Harmonic> harmonics = new ArrayList<Harmonic>();
+	private String fullName = "";
+	private List<String> nameParts = new ArrayList<String>();
+	private double latitude = 0D;
+	private double longitude = 0D;
+	private double baseHeight = 0D;
+	private String unit = "";
+	private String timeZone = "";
+	private String timeOffset = "";
+	private List<Harmonic> harmonics = new ArrayList<Harmonic>();
 
-    private int harmonicsHaveBeenFixedForYear = -1;
+	private int harmonicsHaveBeenFixedForYear = -1;
 
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
+	public void setFullName(String fullName) {
+		this.fullName = fullName;
+	}
 
-    public String getFullName() {
-        return fullName;
-    }
+	public String getFullName() {
+		return fullName;
+	}
 
-    public List<String> getNameParts() {
-        return nameParts;
-    }
+	public List<String> getNameParts() {
+		return nameParts;
+	}
 
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
-    }
+	public void setLatitude(double latitude) {
+		this.latitude = latitude;
+	}
 
-    public double getLatitude() {
-        return latitude;
-    }
+	public double getLatitude() {
+		return latitude;
+	}
 
-    public void setLongitude(double longitude) {
-        this.longitude = longitude;
-    }
+	public void setLongitude(double longitude) {
+		this.longitude = longitude;
+	}
 
-    public double getLongitude() {
-        return longitude;
-    }
+	public double getLongitude() {
+		return longitude;
+	}
 
-    public void setBaseHeight(double baseHeight) {
-        this.baseHeight = baseHeight;
-    }
+	public void setBaseHeight(double baseHeight) {
+		this.baseHeight = baseHeight;
+	}
 
-    public double getBaseHeight() {
-        return baseHeight;
-    }
+	public double getBaseHeight() {
+		return baseHeight;
+	}
 
-    public void setUnit(String unit) {
-        this.unit = unit;
-    }
+	public void setUnit(String unit) {
+		this.unit = unit;
+	}
 
-    public String getUnit() {
-        return unit;
-    }
+	public String getUnit() {
+		return unit;
+	}
 
-    @JsonIgnore
-    public List<Harmonic> getHarmonics() {
-        return harmonics;
-    }
+	public List<Harmonic> getHarmonics() {
+		return harmonics;
+	}
 
-    public void setTimeZone(String timeZone) {
-        this.timeZone = timeZone;
-    }
+	public void setTimeZone(String timeZone) {
+		this.timeZone = timeZone;
+	}
 
-    public String getTimeZone() {
-        return timeZone;
-    }
+	public String getTimeZone() {
+		return timeZone;
+	}
 
-    public void setTimeOffset(String timeOffset) {
-        this.timeOffset = timeOffset;
-    }
+	public void setTimeOffset(String timeOffset) {
+		this.timeOffset = timeOffset;
+	}
 
-    public String getTimeOffset() {
-        return timeOffset;
-    }
+	public String getTimeOffset() {
+		return timeOffset;
+	}
 
-    public boolean isCurrentStation() {
-        return unit.startsWith(KNOTS);
-    }
+	public boolean isCurrentStation() {
+		return unit.startsWith(KNOTS);
+	}
 
-    public boolean isTideStation() {
-        return !unit.startsWith(KNOTS);
-    }
+	public boolean isTideStation() {
+		return !unit.startsWith(KNOTS);
+	}
 
-    public String getDisplayUnit() {
-        if (unit.equals(SQUARE_KNOTS))
-            return KNOTS;
-        else
-            return unit;
-    }
+	public String getDisplayUnit() {
+		if (unit.equals(SQUARE_KNOTS))
+			return KNOTS;
+		else
+			return unit;
+	}
 
-    public void setHarmonicsFixedForYear(int y) {
-        this.harmonicsHaveBeenFixedForYear = y;
-    }
+	public void setHarmonicsFixedForYear(int y) {
+		this.harmonicsHaveBeenFixedForYear = y;
+	}
 
-    public int yearHarmonicsFixed() {
-        return harmonicsHaveBeenFixedForYear;
-    }
+	public int yearHarmonicsFixed() {
+		return harmonicsHaveBeenFixedForYear;
+	}
 
-    @Override
-    public String toString() {
-        return this.getFullName();
-    }
+	@Override
+	public String toString() {
+		return this.getFullName();
+	}
 }

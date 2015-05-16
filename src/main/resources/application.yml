@@ -2,12 +2,11 @@ application:
   name: tides
 
 elasticsearch:
-  cluster: crystalmark
-  manipulationAllowed: true
-  servers:
-    - host: localhost
-      port: 9300
-
+  cluster: elasticsearch
+  host: localhost
+  port: 9300
+  indexName: tides
+  
 logging:
     level:
         es.tidetim: DEBUG
