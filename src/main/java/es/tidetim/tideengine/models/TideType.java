@@ -1,4 +1,4 @@
-package tideengine;
+package es.tidetim.tideengine.models;
 
 
 public enum TideType {

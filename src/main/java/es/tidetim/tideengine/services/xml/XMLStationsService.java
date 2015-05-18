@@ -1,33 +1,42 @@
-package tideengine;
+package es.tidetim.tideengine.services.xml;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-
+import es.tidetim.tideengine.services.TideService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
+import es.tidetim.tideengine.models.Constituents;
+import es.tidetim.tideengine.models.Harmonic;
+import es.tidetim.tideengine.services.StationsService;
+import es.tidetim.tideengine.models.TideStation;
+import es.tidetim.tideengine.services.TideUtilities;
+
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+import java.io.InputStream;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 @Component
 public class XMLStationsService implements StationsService {
-	
+
     public final static String ARCHIVE_STREAM = "/xml/xml.zip";
     public final static String CONSTITUENTS_ENTRY = "constituents.xml";
     public final static String STATIONS_ENTRY = "stations.xml";
+
+    @Autowired
+    TideService tideService;
 
     public Constituents buildConstituents() throws Exception {
         SpeedConstituentFinder scf = new SpeedConstituentFinder();
         try {
             SAXParserFactory factory = SAXParserFactory.newInstance();
             SAXParser saxParser = factory.newSAXParser();
-            InputSource is = XMLTideService.getZipInputSource(ARCHIVE_STREAM, CONSTITUENTS_ENTRY);
+            InputSource is = getZipInputSource(ARCHIVE_STREAM, CONSTITUENTS_ENTRY);
             saxParser.parse(is, scf);
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -35,46 +44,28 @@ public class XMLStationsService implements StationsService {
         return scf.getConstituents();
     }
 
-    public Stations getTideStations() throws Exception {
-        return new Stations(getStationData());
-    }
-
-    public Map<String, TideStation> getStationData() throws Exception {
-        Map<String, TideStation> stationData = new HashMap<String, TideStation>();
-        StationFinder sf = new StationFinder(stationData);
+    public Set<TideStation> loadTideStations() {
+        Set<TideStation> stations = new HashSet<>();
+        StationFinder sf = new StationFinder(stations);
         try {
             SAXParserFactory factory = SAXParserFactory.newInstance();
             SAXParser saxParser = factory.newSAXParser();
-            InputSource is = XMLTideService.getZipInputSource(ARCHIVE_STREAM, STATIONS_ENTRY);
+            InputSource is = getZipInputSource(ARCHIVE_STREAM, STATIONS_ENTRY);
             saxParser.parse(is, sf);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
 
-        return stationData;
+        return stations;
     }
 
-    public List<TideStation> getStationData(Stations stations) throws Exception {
-        List<TideStation> stationData = new ArrayList<TideStation>();
-        Set<String> keys = stations.getStations().keySet();
-        for (String k : keys) {
-            try {
-                stationData.add(stations.getStations().get(k));
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        }
-
-        return stationData;
-    }
-
-    public TideStation reloadOneStation(String stationName) throws Exception {
+    public TideStation loadTideStation(String stationName) {
         StationFinder sf = new StationFinder();
         sf.setStationName(stationName);
         try {
             SAXParserFactory factory = SAXParserFactory.newInstance();
             SAXParser saxParser = factory.newSAXParser();
-            InputSource is = XMLTideService.getZipInputSource(ARCHIVE_STREAM, STATIONS_ENTRY);
+            InputSource is = getZipInputSource(ARCHIVE_STREAM, STATIONS_ENTRY);
             saxParser.parse(is, sf);
         } catch (DoneWithSiteException dwse) {
             System.err.println(dwse.getLocalizedMessage());
@@ -84,10 +75,60 @@ public class XMLStationsService implements StationsService {
         return sf.getTideStation();
     }
 
+    private InputStream getZipInputStream(String zipStream,
+                                          String entryName) throws Exception {
+        ZipInputStream zip = new ZipInputStream(
+                XMLStationsService.class.getResourceAsStream(zipStream));
+        InputStream is = null;
+        boolean go = true;
+        while (go) {
+            ZipEntry ze = zip.getNextEntry();
+            if (ze == null)
+                go = false;
+            else {
+                if (ze.getName().equals(entryName)) {
+                    is = zip;
+                    go = false;
+                }
+            }
+        }
+        if (is == null) {
+            throw new RuntimeException("Entry " + entryName + " not found in "
+                    + zipStream);
+        }
+        return is;
+    }
+
+    private InputSource getZipInputSource(String filename,
+                                          String entryName) throws Exception {
+        InputStream zipStream = XMLStationsService.class
+                .getResourceAsStream(filename);
+        ZipInputStream zip = new ZipInputStream(zipStream);
+        InputSource is = null;
+        boolean go = true;
+        while (go) {
+            ZipEntry ze = zip.getNextEntry();
+            if (ze == null)
+                go = false;
+            else {
+                if (ze.getName().equals(entryName)) {
+                    is = new InputSource(zip);
+                    is.setEncoding("ISO-8859-1");
+                    go = false;
+                }
+            }
+        }
+        if (is == null) {
+            throw new RuntimeException("Entry " + entryName + " not found in "
+                    + filename);
+        }
+        return is;
+    }
+
     public class StationFinder extends DefaultHandler {
         private String stationName = "";
         private TideStation ts = null;
-        private Map<String, TideStation> stationMap = null;
+        private Set<TideStation> stations;
 
         public void setStationName(String sn) {
             this.stationName = sn;
@@ -96,8 +137,8 @@ public class XMLStationsService implements StationsService {
         public StationFinder() {
         }
 
-        public StationFinder(Map<String, TideStation> map) {
-            this.stationMap = map;
+        public StationFinder(Set<TideStation> stations) {
+            this.stations = stations;
         }
 
         public TideStation getTideStation() {
@@ -150,10 +191,10 @@ public class XMLStationsService implements StationsService {
             super.endElement(uri, localName, qName);
             if (foundStation && "station".equals(qName)) {
                 foundStation = false;
-                if (stationMap == null)
+                if (stations == null)
                     throw new DoneWithSiteException("Done with it.");
                 else
-                    stationMap.put(ts.getFullName(), ts);
+                    stations.add(ts);
             } else if (foundNameCollection && "name-collection".equals(qName)) {
                 foundNameCollection = false;
             } else if (foundStationData && "station-data".equals(qName)) {
@@ -234,10 +275,10 @@ public class XMLStationsService implements StationsService {
                 foundCoeffValue = false;
             }
             if ("equilibrium".equals(qName)) {
-                constituent.getEquilibrium().put(new Integer(year), value);
+                constituent.getEquilibrium().put(year, value);
                 foundEquilibrium = false;
             } else if ("factor".equals(qName)) {
-                constituent.getFactors().put(new Integer(year), value);
+                constituent.getFactors().put(year, value);
                 foundFactor = false;
             }
         }

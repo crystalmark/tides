@@ -1,9 +1,6 @@
-package tideengine;
+package es.tidetim.tideengine.models;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
 
 public class TimedValue implements Comparable<TimedValue> {
 

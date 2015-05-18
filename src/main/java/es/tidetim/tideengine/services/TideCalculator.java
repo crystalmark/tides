@@ -1,7 +1,7 @@
-package es.tidetim;
+package es.tidetim.tideengine.services;
 
-import static tideengine.TideType.FALLING;
-import static tideengine.TideType.RISING;
+import static es.tidetim.tideengine.models.TideType.FALLING;
+import static es.tidetim.tideengine.models.TideType.RISING;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -14,12 +14,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import tideengine.XMLTideService;
-import tideengine.Coefficient;
-import tideengine.TideStation;
-import tideengine.TideType;
-import tideengine.TideUtilities;
-import tideengine.TimedValue;
+import es.tidetim.tideengine.models.Coefficient;
+import es.tidetim.tideengine.models.TideStation;
+import es.tidetim.tideengine.models.TideType;
+import es.tidetim.tideengine.models.TimedValue;
 
 @Component
 public class TideCalculator {
@@ -27,7 +25,7 @@ public class TideCalculator {
     private static final Logger LOG = LoggerFactory.getLogger(TideCalculator.class);
     
     @Autowired
-    TideService tideService;
+    TideStationService tideService;
 
     public List<TimedValue> getTides(String location, LocalDate now, int period) throws Exception {
 
@@ -35,9 +33,9 @@ public class TideCalculator {
 
         TideType trend = null;
 
-        TideStation ts = tideService.findTideStation(location, now.getYear());
+        TideStation ts = tideService.getTideStation(location, now.getYear());
 
-        List<Coefficient> constSpeed = tideService.buildSiteConstSpeed();
+        List<Coefficient> constSpeed = tideService.getSiteConstSpeed();
 
         double previousWH = Double.NaN;
 
@@ -97,6 +95,6 @@ public class TideCalculator {
     }
 
     public List<TimedValue> getHighAndLowTides(String location, LocalDate day) throws Exception {
-        return getTides(location, day, 10).stream().filter(tide -> tide.getType() != null && (tide.getType().equals(TideType.HW) || tide.getType().equals(TideType.LW))).collect(Collectors.toList());
+        return getTides(location, day, 1).stream().filter(tide -> tide.getType() != null && (tide.getType().equals(TideType.HW) || tide.getType().equals(TideType.LW))).collect(Collectors.toList());
     }
 }
