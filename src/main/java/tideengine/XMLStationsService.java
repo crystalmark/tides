@@ -16,17 +16,18 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 @Component
-public class BackEndXMLTideComputer {
+public class XMLStationsService implements StationsService {
+	
     public final static String ARCHIVE_STREAM = "/xml/xml.zip";
     public final static String CONSTITUENTS_ENTRY = "constituents.xml";
     public final static String STATIONS_ENTRY = "stations.xml";
 
-    public static Constituents buildConstituents() throws Exception {
+    public Constituents buildConstituents() throws Exception {
         SpeedConstituentFinder scf = new SpeedConstituentFinder();
         try {
             SAXParserFactory factory = SAXParserFactory.newInstance();
             SAXParser saxParser = factory.newSAXParser();
-            InputSource is = BackEndTideComputer.getZipInputSource(ARCHIVE_STREAM, CONSTITUENTS_ENTRY);
+            InputSource is = XMLTideService.getZipInputSource(ARCHIVE_STREAM, CONSTITUENTS_ENTRY);
             saxParser.parse(is, scf);
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -34,17 +35,17 @@ public class BackEndXMLTideComputer {
         return scf.getConstituents();
     }
 
-    public static Stations getTideStations() throws Exception {
+    public Stations getTideStations() throws Exception {
         return new Stations(getStationData());
     }
 
-    public static Map<String, TideStation> getStationData() throws Exception {
+    public Map<String, TideStation> getStationData() throws Exception {
         Map<String, TideStation> stationData = new HashMap<String, TideStation>();
         StationFinder sf = new StationFinder(stationData);
         try {
             SAXParserFactory factory = SAXParserFactory.newInstance();
             SAXParser saxParser = factory.newSAXParser();
-            InputSource is = BackEndTideComputer.getZipInputSource(ARCHIVE_STREAM, STATIONS_ENTRY);
+            InputSource is = XMLTideService.getZipInputSource(ARCHIVE_STREAM, STATIONS_ENTRY);
             saxParser.parse(is, sf);
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -53,7 +54,7 @@ public class BackEndXMLTideComputer {
         return stationData;
     }
 
-    public static List<TideStation> getStationData(Stations stations) throws Exception {
+    public List<TideStation> getStationData(Stations stations) throws Exception {
         List<TideStation> stationData = new ArrayList<TideStation>();
         Set<String> keys = stations.getStations().keySet();
         for (String k : keys) {
@@ -67,13 +68,13 @@ public class BackEndXMLTideComputer {
         return stationData;
     }
 
-    public static TideStation reloadOneStation(String stationName) throws Exception {
+    public TideStation reloadOneStation(String stationName) throws Exception {
         StationFinder sf = new StationFinder();
         sf.setStationName(stationName);
         try {
             SAXParserFactory factory = SAXParserFactory.newInstance();
             SAXParser saxParser = factory.newSAXParser();
-            InputSource is = BackEndTideComputer.getZipInputSource(ARCHIVE_STREAM, STATIONS_ENTRY);
+            InputSource is = XMLTideService.getZipInputSource(ARCHIVE_STREAM, STATIONS_ENTRY);
             saxParser.parse(is, sf);
         } catch (DoneWithSiteException dwse) {
             System.err.println(dwse.getLocalizedMessage());
@@ -83,7 +84,7 @@ public class BackEndXMLTideComputer {
         return sf.getTideStation();
     }
 
-    public static class StationFinder extends DefaultHandler {
+    public class StationFinder extends DefaultHandler {
         private String stationName = "";
         private TideStation ts = null;
         private Map<String, TideStation> stationMap = null;
@@ -256,7 +257,7 @@ public class BackEndXMLTideComputer {
         }
     }
 
-    public static class DoneWithSiteException extends SAXException {
+    public class DoneWithSiteException extends SAXException {
         public final static long serialVersionUID = 1L;
 
         public DoneWithSiteException(String s) {

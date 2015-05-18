@@ -1,5 +1,6 @@
 package tideengine;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.xml.sax.InputSource;
 
 import java.io.InputStream;
@@ -15,9 +16,12 @@ import java.util.zip.ZipInputStream;
  * Access method agnostic front end. Calls the right methods, depending on the
  * chosen option (XML, SQL, JAVA, json, etc)
  */
-public class BackEndTideComputer {
+public class XMLTideService {
 	private static Constituents constituentsObject = null;
 	private static Stations stationsObject = null;
+	
+	@Autowired
+	StationsService stationsService;
 
 	public static Stations getStations() {
 		return stationsObject;
@@ -27,34 +31,32 @@ public class BackEndTideComputer {
 		return constituentsObject;
 	}
 
-	public static void connect() throws Exception {
-		constituentsObject = BackEndXMLTideComputer.buildConstituents(); // Uses
-		stationsObject = BackEndXMLTideComputer.getTideStations(); // Uses SAX
+	private void connect() throws Exception {
+		constituentsObject = XMLStationsService.buildConstituents(); // Uses
+		stationsObject = XMLStationsService.getTideStations(); // Uses SAX
 	}
 
 	public static void disconnect() throws Exception {
 	}
 
-	public static List<Coefficient> buildSiteConstSpeed() throws Exception {
-		List<Coefficient> constSpeed = null;
-		constSpeed = buildSiteConstSpeed(constituentsObject);
-		return constSpeed;
+	public List<Coefficient> getSiteConstSpeed() throws Exception {
+		return buildSiteConstSpeed(constituentsObject);
 	}
 
-	public static double getAmplitudeFix(int year, String name)
+	public double getAmplitudeFix(int year, String name)
 			throws Exception {
 		double d = 0;
 		d = getAmplitudeFix(constituentsObject, year, name);
 		return d;
 	}
 
-	public static double getEpochFix(int year, String name) throws Exception {
+	public double getEpochFix(int year, String name) throws Exception {
 		double d = 0;
 		d = getEpochFix(constituentsObject, year, name);
 		return d;
 	}
 
-	public static TideStation findTideStation(String stationName, int year)
+	public TideStation findTideStation(String stationName, int year)
 			throws Exception {
 		TideStation ts = null;
 		ts = findTideStation(stationName, year, constituentsObject,
@@ -62,23 +64,21 @@ public class BackEndTideComputer {
 		return ts;
 	}
 
-	public static List<TideStation> getStationData() throws Exception {
-		List<TideStation> alts = null;
-		alts = getStationData(stationsObject);
-		return alts;
+	public List<TideStation> getTideStations() throws Exception {
+		return getTideStations(stationsObject);
 	}
 
-	public static TreeMap<String, TideUtilities.StationTreeNode> buildStationTree() {
+	public TreeMap<String, TideUtilities.StationTreeNode> getStationTree() {
 		TreeMap<String, TideUtilities.StationTreeNode> st = null;
 
 		st = TideUtilities.buildStationTree(stationsObject);
 		return st;
 	}
 
-	public static InputStream getZipInputStream(String zipStream,
+	private InputStream getZipInputStream(String zipStream,
 			String entryName) throws Exception {
 		ZipInputStream zip = new ZipInputStream(
-				BackEndXMLTideComputer.class.getResourceAsStream(zipStream));
+				XMLStationsService.class.getResourceAsStream(zipStream));
 		InputStream is = null;
 		boolean go = true;
 		while (go) {
@@ -99,9 +99,9 @@ public class BackEndTideComputer {
 		return is;
 	}
 
-	public static InputSource getZipInputSource(String filename,
+	private InputSource getZipInputSource(String filename,
 			String entryName) throws Exception {
-		InputStream zipStream = BackEndXMLTideComputer.class
+		InputStream zipStream = XMLStationsService.class
 				.getResourceAsStream(filename);
 		ZipInputStream zip = new ZipInputStream(zipStream);
 		InputSource is = null;
@@ -125,7 +125,7 @@ public class BackEndTideComputer {
 		return is;
 	}
 
-	public static List<Coefficient> buildSiteConstSpeed(Constituents doc)
+	public List<Coefficient> getSiteConstSpeed(Constituents doc)
 			throws Exception {
 		List<Coefficient> csal = new ArrayList<>();
 		Map<String, Constituents.ConstSpeed> csm = doc.getConstSpeedMap();
@@ -139,7 +139,7 @@ public class BackEndTideComputer {
 		return csal;
 	}
 
-	public static double getAmplitudeFix(Constituents doc, int year, String name)
+	public double getAmplitudeFix(Constituents doc, int year, String name)
 			throws Exception {
 		double d = 0;
 		try {
@@ -153,7 +153,7 @@ public class BackEndTideComputer {
 		return d;
 	}
 
-	public static double getEpochFix(Constituents doc, int year, String name)
+	public double getEpochFix(Constituents doc, int year, String name)
 			throws Exception {
 		double d = 0;
 		try {
@@ -167,7 +167,7 @@ public class BackEndTideComputer {
 		return d;
 	}
 
-	public static TideStation findTideStation(String stationName, int year,
+	public TideStation findTideStation(String stationName, int year,
 			Constituents constituents, Stations stations) throws Exception {
 		TideStation station = stations.getStations().get(stationName);
 		if (station == null) // Try match
@@ -212,14 +212,12 @@ public class BackEndTideComputer {
 		return station;
 	}
 
-	private static TideStation reloadTideStation(String stationName)
+	private TideStation getTideStation(String stationName)
 			throws Exception {
-		TideStation ts = null;
-		ts = BackEndXMLTideComputer.reloadOneStation(stationName);
-		return ts;
+		return stationsService.getTideStation(stationName);
 	}
 
-	public static List<TideStation> getStationData(Stations stations)
+	public List<TideStation> getTideStation(Stations stations)
 			throws Exception {
 		List<TideStation> stationData = new ArrayList<TideStation>();
 		Set<String> keys = stations.getStations().keySet();

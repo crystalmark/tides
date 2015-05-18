@@ -11,9 +11,10 @@ import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import tideengine.BackEndTideComputer;
+import tideengine.XMLTideService;
 import tideengine.Coefficient;
 import tideengine.TideStation;
 import tideengine.TideType;
@@ -24,18 +25,19 @@ import tideengine.TimedValue;
 public class TideCalculator {
 
     private static final Logger LOG = LoggerFactory.getLogger(TideCalculator.class);
+    
+    @Autowired
+    TideService tideService;
 
     public List<TimedValue> getTides(String location, LocalDate now, int period) throws Exception {
 
         List<TimedValue> tides = new LinkedList<>();
 
-        BackEndTideComputer.connect();
-
         TideType trend = null;
 
-        TideStation ts = BackEndTideComputer.findTideStation(location, now.getYear());
+        TideStation ts = tideService.findTideStation(location, now.getYear());
 
-        List<Coefficient> constSpeed = BackEndTideComputer.buildSiteConstSpeed();
+        List<Coefficient> constSpeed = tideService.buildSiteConstSpeed();
 
         double previousWH = Double.NaN;
 
@@ -89,8 +91,6 @@ public class TideCalculator {
             }
             cal = cal.plusMinutes(period);
         }
-
-        BackEndTideComputer.disconnect();
 
         return tides.stream().filter(tide -> tide.getCalendar().getDayOfYear() == now.getDayOfYear()).sorted().collect(Collectors.toList());
 

@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import tideengine.BackEndTideComputer;
+import tideengine.XMLTideService;
 import tideengine.Stations;
 import tideengine.TimedValue;
 
@@ -53,6 +53,9 @@ public class TideService {
 
 	@Autowired
 	TideCalculator calculator;
+	
+	@Autowired
+	TideService tideService;
 
 	@RequestMapping(value = "{location}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody List<TimedValue> getTideHeightAtTimeAndPlace(
@@ -100,12 +103,7 @@ public class TideService {
 	@RequestMapping(value = "stations", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody Stations getStations() throws Exception {
 
-		try {
-			BackEndTideComputer.connect();
-			return BackEndTideComputer.getStations();
-		} finally {
-			BackEndTideComputer.disconnect();
-		}
+			return tideService.getStations();
 	}
 
 	@RequestMapping(value = "load", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
