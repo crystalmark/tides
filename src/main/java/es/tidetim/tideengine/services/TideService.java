@@ -30,6 +30,8 @@ import java.time.ZoneId;
 import java.util.Collection;
 import java.util.List;
 
+import static java.util.stream.Collectors.toList;
+
 @Controller
 @RequestMapping("/tides")
 public class TideService {
@@ -105,8 +107,8 @@ public class TideService {
     @RequestMapping(value = "stations", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public
     @ResponseBody
-    Collection<TideStation> getStations() throws Exception {
-        return tideStationsService.getTideStations();
+    Collection<String> getStations() throws Exception {
+        return tideStationsService.getTideStations().stream().map(TideStation::getFullName).sorted().collect(toList());
     }
 
     @RequestMapping(value = "load", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -134,7 +136,7 @@ public class TideService {
                 createIndexRequestBuilder.execute().actionGet();
             }
 
-            getStations()
+            tideStationsService.getTideStations()
                     .stream()
                     .forEach(
                             station -> {
