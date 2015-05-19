@@ -1,24 +1,36 @@
 package es.tidetim.tideengine.models;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import es.tidetim.tideengine.util.JsonDateDeserializer;
+import es.tidetim.tideengine.util.JsonDateSerializer;
+
 import java.time.LocalDateTime;
 
 public class TimedValue implements Comparable<TimedValue> {
 
-    private LocalDateTime cal;
+    @JsonDeserialize(using = JsonDateDeserializer.class)
+    @JsonSerialize(using = JsonDateSerializer.class)
+    private LocalDateTime calendar;
+
     private double value;
+
     private TideType type;
 
-    public TimedValue(LocalDateTime cal, double d) {
-        this.cal = cal;
+    public TimedValue(LocalDateTime calendar, double d) {
+        this.calendar = calendar;
         this.value = d;
     }
 
+    public TimedValue() {
+    }
+
     public int compareTo(TimedValue tv) {
-        return this.cal.compareTo(tv.getCalendar());
+        return this.calendar.compareTo(tv.getCalendar());
     }
 
     public LocalDateTime getCalendar() {
-        return cal;
+        return calendar;
     }
 
     public double getValue() {

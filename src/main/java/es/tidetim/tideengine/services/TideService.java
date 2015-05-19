@@ -1,6 +1,8 @@
 package es.tidetim.tideengine.services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import es.tidetim.tideengine.models.TideStation;
+import es.tidetim.tideengine.models.TimedValue;
 import org.elasticsearch.action.admin.indices.create.CreateIndexRequestBuilder;
 import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsRequest;
 import org.elasticsearch.client.transport.TransportClient;
@@ -19,8 +21,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import es.tidetim.tideengine.models.TideStation;
-import es.tidetim.tideengine.models.TimedValue;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -149,7 +149,7 @@ public class TideService {
                                 }
                             });
 
-            return "yes";
+            return "{\"result\":\"success\"}";
         } finally {
             tclient.close();
         }
