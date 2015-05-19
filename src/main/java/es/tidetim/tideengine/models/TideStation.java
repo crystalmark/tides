@@ -1,4 +1,4 @@
-package tideengine;
+package es.tidetim.tideengine.models;
 
 import java.io.Serializable;
 import java.util.ArrayList;

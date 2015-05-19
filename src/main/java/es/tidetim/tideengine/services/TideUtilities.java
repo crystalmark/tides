@@ -1,5 +1,8 @@
-package tideengine;
+package es.tidetim.tideengine.services;
 
+import es.tidetim.tideengine.models.Coefficient;
+import es.tidetim.tideengine.models.Harmonic;
+import es.tidetim.tideengine.models.TideStation;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -111,7 +114,7 @@ public class TideUtilities {
     }
 
     public static TreeMap<String, StationTreeNode> buildStationTree(InputSource stationFileInputSource) {
-        TreeMap<String, StationTreeNode> set = new TreeMap<String, StationTreeNode>();
+        TreeMap<String, StationTreeNode> set = new TreeMap<>();
 
         long before = System.currentTimeMillis();
         StationObserver sf = new StationObserver();
@@ -129,22 +132,9 @@ public class TideUtilities {
         return set;
     }
 
-    public static TreeMap<String, StationTreeNode> buildStationTree(Stations stations) {
-        TreeMap<String, StationTreeNode> set = new TreeMap<String, StationTreeNode>();
-
-        long before = System.currentTimeMillis();
-        try {
-            Set<String> keys = stations.getStations().keySet();
-            for (String k : keys) {
-                TideStation station = stations.getStations().get(k);
-                addStationToTree(station, set);
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        long after = System.currentTimeMillis();
-        if (verbose) System.out.println("Populating the tree took " + Long.toString(after - before) + " ms");
-
+    public static TreeMap<String, StationTreeNode> buildStationTree(Set<TideStation> stations) {
+        final TreeMap<String, StationTreeNode> set = new TreeMap<>();
+        stations.stream().forEach( station -> addStationToTree(station, set));
         return set;
     }
 
@@ -182,27 +172,26 @@ public class TideUtilities {
         return getWaterHeight(d, ts, constSpeed, false);
     }
 
-    public static double getWaterHeight(LocalDateTime d, TideStation ts, List<Coefficient> constSpeed, boolean b) {
+    public static double getWaterHeight(LocalDateTime date, TideStation station, List<Coefficient> constSpeed, boolean b) {
         double value = 0d;
 
-        LocalDateTime jan1st = LocalDate.of(d.getYear(), Month.JANUARY, 1).atStartOfDay();
+        LocalDateTime jan1st = LocalDate.of(date.getYear(), Month.JANUARY, 1).atStartOfDay();
 
-        long d1 = d.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+        long d1 = date.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
         long j1 = jan1st.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
 
-        double stationBaseHeight = ts.getBaseHeight();
+        double stationBaseHeight = station.getBaseHeight();
         long nbSecSinceJan1st = (d1 - j1) / 1000L;
         double timeOffset = nbSecSinceJan1st * 0.00027777777777777778D;
         value = stationBaseHeight;
         for (int i = 0; i < constSpeed.size(); i++) {
-            assert (ts.getHarmonics().get(i).getName().equals(constSpeed.get(i).getName()));
-            if (!ts.getHarmonics().get(i).getName().equals(constSpeed.get(i).getName()))
+            assert (station.getHarmonics().get(i).getName().equals(constSpeed.get(i).getName()));
+            if (!station.getHarmonics().get(i).getName().equals(constSpeed.get(i).getName()))
                 System.out.println("..... Mismatch!!!");
 
-            value += (ts.getHarmonics().get(i).getAmplitude() * Math.cos(constSpeed.get(i).getValue() * timeOffset - ts.getHarmonics().get(i).getEpoch()));
+            value += (station.getHarmonics().get(i).getAmplitude() * Math.cos(constSpeed.get(i).getValue() * timeOffset - station.getHarmonics().get(i).getEpoch()));
         }
-        if (verbose) System.out.println("-----------------------------");
-        if (ts.getUnit().indexOf("^2") > -1)
+        if (station.getUnit().indexOf("^2") > -1)
             value = (value >= 0.0D ? Math.sqrt(value) : -Math.sqrt(-value));
 
         return value;
@@ -255,7 +244,6 @@ public class TideUtilities {
         value = stationBaseHeight;
 
         int constSpeedIdx = getHarmonicIndex(ts.getHarmonics(), coeffName);
-//  int constSpeedIdx = getHarmonicIndex(constSpeed, coeffName);
 
         value += (ts.getHarmonics().get(constSpeedIdx).getAmplitude() * Math.cos(constSpeed.get(constSpeedIdx).getValue() * timeOffset - ts.getHarmonics().get(constSpeedIdx).getEpoch()));
         if (ts.getUnit().indexOf("^2") > -1)
@@ -373,7 +361,7 @@ public class TideUtilities {
         return hcList;
     }
 
-    private static void addStationToTree(tideengine.TideStation ts, TreeMap<String, TideUtilities.StationTreeNode> currentTree) {
+    private static void addStationToTree(TideStation ts, TreeMap<String, TideUtilities.StationTreeNode> currentTree) {
         String timeZoneLabel = "";
         try {
             timeZoneLabel = ts.getTimeZone().substring(0, ts.getTimeZone().indexOf("/"));
@@ -399,7 +387,7 @@ public class TideUtilities {
             stn = currentTree.get(name);
             if (stn == null) {
                 stn = new StationTreeNode(name);
-                stn.setStationType(ts.isCurrentStation() ? tideengine.TideUtilities.StationTreeNode.CURRENT_STATION : tideengine.TideUtilities.StationTreeNode.TIDE_STATION);
+                stn.setStationType(ts.isCurrentStation() ? TideUtilities.StationTreeNode.CURRENT_STATION : TideUtilities.StationTreeNode.TIDE_STATION);
                 currentTree.put(name, stn);
             }
             currentTree = stn.getSubTree();

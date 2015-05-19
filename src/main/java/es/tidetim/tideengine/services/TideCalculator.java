@@ -1,7 +1,7 @@
-package es.tidetim;
+package es.tidetim.tideengine.services;
 
-import static tideengine.TideType.FALLING;
-import static tideengine.TideType.RISING;
+import static es.tidetim.tideengine.models.TideType.FALLING;
+import static es.tidetim.tideengine.models.TideType.RISING;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -11,31 +11,31 @@ import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import tideengine.BackEndTideComputer;
-import tideengine.Coefficient;
-import tideengine.TideStation;
-import tideengine.TideType;
-import tideengine.TideUtilities;
-import tideengine.TimedValue;
+import es.tidetim.tideengine.models.Coefficient;
+import es.tidetim.tideengine.models.TideStation;
+import es.tidetim.tideengine.models.TideType;
+import es.tidetim.tideengine.models.TimedValue;
 
 @Component
 public class TideCalculator {
 
     private static final Logger LOG = LoggerFactory.getLogger(TideCalculator.class);
+    
+    @Autowired
+    TideStationService tideService;
 
     public List<TimedValue> getTides(String location, LocalDate now, int period) throws Exception {
 
         List<TimedValue> tides = new LinkedList<>();
 
-        BackEndTideComputer.connect();
-
         TideType trend = null;
 
-        TideStation ts = BackEndTideComputer.findTideStation(location, now.getYear());
+        TideStation ts = tideService.getTideStation(location, now.getYear());
 
-        List<Coefficient> constSpeed = BackEndTideComputer.buildSiteConstSpeed();
+        List<Coefficient> constSpeed = tideService.getSiteConstSpeed();
 
         double previousWH = Double.NaN;
 
@@ -90,13 +90,11 @@ public class TideCalculator {
             cal = cal.plusMinutes(period);
         }
 
-        BackEndTideComputer.disconnect();
-
         return tides.stream().filter(tide -> tide.getCalendar().getDayOfYear() == now.getDayOfYear()).sorted().collect(Collectors.toList());
 
     }
 
     public List<TimedValue> getHighAndLowTides(String location, LocalDate day) throws Exception {
-        return getTides(location, day, 10).stream().filter(tide -> tide.getType() != null && (tide.getType().equals(TideType.HW) || tide.getType().equals(TideType.LW))).collect(Collectors.toList());
+        return getTides(location, day, 1).stream().filter(tide -> tide.getType() != null && (tide.getType().equals(TideType.HW) || tide.getType().equals(TideType.LW))).collect(Collectors.toList());
     }
 }
