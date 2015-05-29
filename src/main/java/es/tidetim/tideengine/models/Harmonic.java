@@ -4,9 +4,6 @@ import java.io.Serializable;
 
 public class Harmonic implements Serializable
 {
-  @SuppressWarnings("compatibility:4189758306527325811")
-  private final static long serialVersionUID = 1L;
-
   private String name = "";
   private double amplitude = 0D;
   private double epoch = 0D;

@@ -8,8 +8,6 @@ import java.util.Map;
 
 public class Constituents implements Serializable
 {
-  @SuppressWarnings("compatibility:9177290185319880922")
-  private final static long serialVersionUID = 1L;
   private Map<String, ConstSpeed> constSpeedMap = new LinkedHashMap<String, ConstSpeed>();
   
   public Map<String, ConstSpeed> getConstSpeedMap()
@@ -18,10 +16,7 @@ public class Constituents implements Serializable
   }
     
   public static class ConstSpeed implements Serializable
-  {
-    @SuppressWarnings("compatibility:-5425660072213952784")
-    private final static long serialVersionUID = 1L;
-
+  {    
     private int idx = 0;
     private String coeffName = "";
     private double coeffValue = 0d;

@@ -396,7 +396,7 @@ public class TideUtilities {
         // currentTree.put(ts.getFullName(), new StationTreeNode(ts.getFullName()));
     }
 
-    public static class StationTreeNode implements Comparable {
+    public static class StationTreeNode implements Comparable<StationTreeNode> {
         public final static int TIDE_STATION = 1;
         public final static int CURRENT_STATION = 2;
 
@@ -414,8 +414,8 @@ public class TideUtilities {
             return this.label;
         }
 
-        public int compareTo(Object o) {
-            return this.label.compareTo(o.toString());
+        public int compareTo(StationTreeNode s) {
+            return this.label.compareTo(s.label);
         }
 
         public TreeMap<String, TideUtilities.StationTreeNode> getSubTree() {
@@ -438,8 +438,8 @@ public class TideUtilities {
             return stationType;
         }
 
-        public boolean equals(Object o) {
-            return (o instanceof StationTreeNode && this.compareTo(o) == 0);
+        public boolean equals(StationTreeNode o) {
+            return this.compareTo(o) == 0;
         }
     }
 

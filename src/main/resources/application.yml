@@ -1,6 +1,9 @@
 application:
   name: tides
 
+server:
+    port: 8089
+
 elasticsearch:
   cluster: mygovscot
   host: localhost
