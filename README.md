@@ -1,24 +1,35 @@
 # Tide Calculator
 
-A RESTFul interface for calculating tide times for any date from 1970 onwards.  Based on harmonics from 2004, the calculated times and hights seems to be within 10 minutes of the main websites.
-
+A simple Java API for calculating tide times for any date from 1970 onwards.  
+Based on harmonics from 2004, the calculated times and heights seems to be within 10 minutes of the main websites.
 The times and heights produced by this software should not be used for navigation.
 
-## Build and Run
+## Build
 
-You will need to unzip the xml.zip file in /src/main/resources/xml.
+You will need maven and Java 8 (min), the project has no other external dependencies.
+```bash
+mvn clean package -DskipTests
+```
 
-To build and run use mvn spring-boot:run
+## Install on to your maven repo
+```bash
+mvn install:install-file -Dfile=target/jtide-0.0.1.jar -DgroupId=com.github.guikeller -DartifactId=jtide -Dversion=0.0.1 -Dpackaging=jar
+```
 
-## Endpoint examples
+## Contributing
 
-http://localhost:8080/tides/Leith
-http://localhost:8080/tides/Leith?date=20150728
-http://localhost:8080/tides/hourly/Leith
-http://localhost:8080/tides/hourly/Leith?date=20150728
-http://localhost:8080/tides/stations
+You might send through a PR, if well explained I will merge in.
+Otherwise, feel free to change the package name and make it your own.
 
-Output is currently application/json
+## Examples
 
-Enjoy.
+See the "DemoUsage" class on the test folder.
+
+## In all fairness
+
+This is fork of "https://github.com/crystalmark/tides/" so all the credit should go to him.
+I just made it into a lib that others can use, tidied up a bit, and removed external deps.
+
+## License
+MIT - Enjoy!
 
