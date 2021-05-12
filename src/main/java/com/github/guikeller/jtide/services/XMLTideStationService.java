@@ -8,7 +8,7 @@ import java.util.*;
 
 public class XMLTideStationService {
 
-    private XMLDataLoader stationsService = new XMLDataLoader();
+    private final XMLDataLoader stationsService = new XMLDataLoader();
     private Constituents constituents = null;
     private Set<TideStation> stations = null;
     private static final String RESERVED_KEY = "x";

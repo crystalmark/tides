@@ -17,7 +17,7 @@ import static com.github.guikeller.jtide.models.TideType.RISING;
 
 public class TideCalculator {
 
-    private XMLTideStationService tideService;
+    private final XMLTideStationService tideService;
 
     public TideCalculator(XMLTideStationService tideService){
         this.tideService = tideService;

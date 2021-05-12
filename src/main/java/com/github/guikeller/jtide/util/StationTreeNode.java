@@ -10,7 +10,7 @@ public class StationTreeNode implements Comparable {
     private String label = "";
     private String fullStationName = null;
     private int stationType = 0;
-    private TreeMap<String, StationTreeNode> subTree = new TreeMap<String, StationTreeNode>();
+    private final TreeMap<String, StationTreeNode> subTree = new TreeMap<String, StationTreeNode>();
 
     public StationTreeNode(String label) {
         this.label = label;

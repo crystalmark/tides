@@ -17,7 +17,7 @@ import java.util.TreeMap;
 public class DemoUsage {
 
     private boolean previousIsLeaf = false;
-    private TideApi api = new TideApi();
+    private final TideApi api = new TideApi();
 
     public DemoUsage() {
         super();
@@ -80,7 +80,7 @@ public class DemoUsage {
     }
 
     public void printEndMsg() {
-        System.out.println("");
+        System.out.println();
         System.out.println("* * * # * * *");
         System.out.println("It works, so if you want something better, clone this repo and do it yourself.");
     }

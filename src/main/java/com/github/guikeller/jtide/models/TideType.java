@@ -7,7 +7,7 @@ public enum TideType {
     FALLING("Falling"),
     RISING("Rising");
 
-    private String description;
+    private final String description;
 
     TideType(String description) {
         this.description = description;

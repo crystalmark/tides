@@ -5,7 +5,7 @@ import java.util.Map;
 
 public class Constituents {
 
-  private Map<String, ConstSpeed> constSpeedMap = new LinkedHashMap<>();
+  private final Map<String, ConstSpeed> constSpeedMap = new LinkedHashMap<>();
   
   public Map<String, ConstSpeed> getConstSpeedMap() {
     return constSpeedMap;

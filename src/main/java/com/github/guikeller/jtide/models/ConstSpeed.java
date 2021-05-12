@@ -8,8 +8,8 @@ public class ConstSpeed {
     private int idx = 0;
     private String coeffName = "";
     private double coeffValue = 0d;
-    private Map<Integer, Double> equilibrium = new HashMap<Integer, Double>();
-    private Map<Integer, Double> factors     = new HashMap<Integer, Double>();
+    private final Map<Integer, Double> equilibrium = new HashMap<Integer, Double>();
+    private final Map<Integer, Double> factors     = new HashMap<Integer, Double>();
 
     public ConstSpeed(int idx, String name, double val) {
         this.idx = idx;

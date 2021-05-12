@@ -325,7 +325,7 @@ public class TideUtilities {
         try {
             timeZoneLabel = station.getTimeZone().substring(0, station.getTimeZone().indexOf("/"));
         } catch (Exception ex) {
-            System.err.println(ex.toString() + " for " + station.getFullName() + " , " + station.getTimeZone());
+            System.err.println(ex + " for " + station.getFullName() + " , " + station.getTimeZone());
         }
         StationTreeNode treeNode = currentTree.get(timeZoneLabel);
         if (treeNode == null) {

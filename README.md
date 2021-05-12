@@ -43,7 +43,7 @@ import java.util.TreeMap;
 public class DemoUsage {
 
     private boolean previousIsLeaf = false;
-    private TideApi api = new TideApi();
+    private final TideApi api = new TideApi();
 
     public DemoUsage() {
         super();
@@ -90,7 +90,7 @@ public class DemoUsage {
         String firstStationName = "Aba, Nagasaki, Japan";
         List<TimedValue> hourlyTides = api.getHourlyTides(firstStationName, LocalDate.now());
         hourlyTides.forEach(timedValue -> {
-            System.out.println("value: "+ timedValue.getValue() + " / type: " + timedValue.getType() + " / time: "+timedValue.getCalendar());
+            System.out.println("value: " + timedValue.getValue() + " / type: " + timedValue.getType() + " / time: " + timedValue.getCalendar());
         });
     }
 
@@ -101,12 +101,12 @@ public class DemoUsage {
         String firstStationName = "Aba, Nagasaki, Japan";
         List<TimedValue> hourlyTides = api.getTideHeightAtTimeAndPlace(firstStationName, LocalDate.now());
         hourlyTides.forEach(timedValue -> {
-            System.out.println("value: "+ timedValue.getValue() + " / type: " + timedValue.getType() + " / time: "+timedValue.getCalendar());
+            System.out.println("value: " + timedValue.getValue() + " / type: " + timedValue.getType() + " / time: " + timedValue.getCalendar());
         });
     }
 
     public void printEndMsg() {
-        System.out.println("");
+        System.out.println();
         System.out.println("* * * # * * *");
         System.out.println("It works, so if you want something better, clone this repo and do it yourself.");
     }
