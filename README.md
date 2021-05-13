@@ -1,4 +1,4 @@
-# Tide Calculator
+# JTides / A Tide Calculator
 
 A simple Java API for calculating tide times for any date from 1970 onwards. 
 
@@ -22,7 +22,7 @@ mvn install:install-file -Dfile=target/jtides-0.0.2.jar -DgroupId=com.github -Da
 
 You might send through a PR, if well explained I will merge in.
 
-Otherwise, feel free to change the package name and make it your own.
+Otherwise, feel free to fork it and make it your own.
 
 ## Example
 
@@ -171,11 +171,9 @@ Google: "tide Aba, Nagasaki, Japan" (and compare the results).
 
 PS: times and tides might be slightly off, if so adjust on the 'consumer' / 'client' side.
 
-## Acknowledgments
+## Contributions
 
-This is fork of "https://github.com/crystalmark/tides/" so all the credit should go to him.
-
-I just made it into a lib that others can use, tidied up a bit, and removed external deps.
+Gui Keller - https://github.com/guikeller/ 
 
 ## License
 
