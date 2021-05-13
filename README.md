@@ -14,8 +14,19 @@ mvn clean package -DskipTests
 ```
 
 ## Install on to your maven repo
+
+You may get the binary from: https://github.com/guikeller/tides/releases
 ```bash
 mvn install:install-file -Dfile=target/jtides-0.0.2.jar -DgroupId=com.github -DartifactId=jtides -Dversion=0.0.2 -Dpackaging=jar
+```
+
+## Use as a dependency pom.xml
+```xml
+<dependency>
+    <groupId>com.github</groupId>
+    <artifactId>jtides</artifactId>
+    <version>0.0.2</version>
+</dependency>    
 ```
 
 ## Contributing
