@@ -15,7 +15,7 @@ mvn clean package -DskipTests
 
 ## Install on to your maven repo
 ```bash
-mvn install:install-file -Dfile=target/jtide-0.0.1.jar -DgroupId=com.github.guikeller -DartifactId=jtide -Dversion=0.0.1 -Dpackaging=jar
+mvn install:install-file -Dfile=target/jtides-0.0.2.jar -DgroupId=com.github -DartifactId=jtides -Dversion=0.0.2 -Dpackaging=jar
 ```
 
 ## Contributing
@@ -26,7 +26,7 @@ Otherwise, feel free to change the package name and make it your own.
 
 ## Example
 
-See the "DemoUsage" class on the test folder.
+This is the "DemoUsage" which is also on the test folder.
 
 ```java
 import TideApi;
