@@ -1,7 +1,7 @@
-package com.github.guikeller.jtide.services;
+package com.github.jtides.services;
 
-import com.github.guikeller.jtide.models.Constituents;
-import com.github.guikeller.jtide.models.TideStation;
+import com.github.jtides.models.Constituents;
+import com.github.jtides.models.TideStation;
 import org.xml.sax.InputSource;
 
 import javax.xml.parsers.SAXParser;

@@ -1,6 +1,6 @@
-package com.github.guikeller.jtide.util;
+package com.github.jtides.util;
 
-import com.github.guikeller.jtide.models.TideStation;
+import com.github.jtides.models.TideStation;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;

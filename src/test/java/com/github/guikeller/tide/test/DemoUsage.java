@@ -1,8 +1,8 @@
 package com.github.guikeller.tide.test;
 
-import com.github.guikeller.jtide.api.TideApi;
-import com.github.guikeller.jtide.models.TimedValue;
-import com.github.guikeller.jtide.util.StationTreeNode;
+import com.github.jtides.api.TideApi;
+import com.github.jtides.models.TimedValue;
+import com.github.jtides.util.StationTreeNode;
 
 import java.time.LocalDate;
 import java.util.List;

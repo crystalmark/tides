@@ -1,8 +1,8 @@
-package com.github.guikeller.jtide.services;
+package com.github.jtides.services;
 
-import com.github.guikeller.jtide.models.*;
-import com.github.guikeller.jtide.util.StationTreeNode;
-import com.github.guikeller.jtide.util.TideUtilities;
+import com.github.jtides.models.*;
+import com.github.jtides.util.StationTreeNode;
+import com.github.jtides.util.TideUtilities;
 
 import java.util.*;
 

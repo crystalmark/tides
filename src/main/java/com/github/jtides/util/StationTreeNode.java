@@ -1,4 +1,4 @@
-package com.github.guikeller.jtide.util;
+package com.github.jtides.util;
 
 import java.util.TreeMap;
 

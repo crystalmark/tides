@@ -1,11 +1,11 @@
-package com.github.guikeller.jtide.api;
+package com.github.jtides.api;
 
-import com.github.guikeller.jtide.models.TideStation;
-import com.github.guikeller.jtide.models.TimedValue;
-import com.github.guikeller.jtide.services.TideCalculator;
-import com.github.guikeller.jtide.services.XMLTideStationService;
-import com.github.guikeller.jtide.util.StationTreeNode;
-import com.github.guikeller.jtide.util.TideUtilities;
+import com.github.jtides.models.TideStation;
+import com.github.jtides.models.TimedValue;
+import com.github.jtides.services.TideCalculator;
+import com.github.jtides.services.XMLTideStationService;
+import com.github.jtides.util.StationTreeNode;
+import com.github.jtides.util.TideUtilities;
 
 import java.time.LocalDate;
 import java.util.List;

@@ -1,8 +1,8 @@
-package com.github.guikeller.jtide.services;
+package com.github.jtides.services;
 
-import com.github.guikeller.jtide.models.Harmonic;
-import com.github.guikeller.jtide.models.TideStation;
-import com.github.guikeller.jtide.util.TideUtilities;
+import com.github.jtides.models.Harmonic;
+import com.github.jtides.models.TideStation;
+import com.github.jtides.util.TideUtilities;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;

@@ -1,4 +1,4 @@
-package com.github.guikeller.jtide.services;
+package com.github.jtides.services;
 
 import org.xml.sax.SAXException;
 

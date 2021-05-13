@@ -29,9 +29,9 @@ Otherwise, feel free to change the package name and make it your own.
 See the "DemoUsage" class on the test folder.
 
 ```java
-import com.github.guikeller.jtide.api.TideApi;
-import com.github.guikeller.jtide.models.TimedValue;
-import com.github.guikeller.jtide.util.StationTreeNode;
+import TideApi;
+import TimedValue;
+import StationTreeNode;
 
 import java.time.LocalDate;
 import java.util.List;

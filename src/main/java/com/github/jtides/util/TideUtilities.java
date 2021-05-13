@@ -1,8 +1,8 @@
-package com.github.guikeller.jtide.util;
+package com.github.jtides.util;
 
-import com.github.guikeller.jtide.models.Coefficient;
-import com.github.guikeller.jtide.models.Harmonic;
-import com.github.guikeller.jtide.models.TideStation;
+import com.github.jtides.models.Coefficient;
+import com.github.jtides.models.Harmonic;
+import com.github.jtides.models.TideStation;
 import org.xml.sax.InputSource;
 
 import javax.xml.parsers.SAXParser;

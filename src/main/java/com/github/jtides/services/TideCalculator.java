@@ -1,10 +1,10 @@
-package com.github.guikeller.jtide.services;
+package com.github.jtides.services;
 
-import com.github.guikeller.jtide.models.Coefficient;
-import com.github.guikeller.jtide.models.TideStation;
-import com.github.guikeller.jtide.models.TideType;
-import com.github.guikeller.jtide.models.TimedValue;
-import com.github.guikeller.jtide.util.TideUtilities;
+import com.github.jtides.models.Coefficient;
+import com.github.jtides.models.TideStation;
+import com.github.jtides.models.TideType;
+import com.github.jtides.models.TimedValue;
+import com.github.jtides.util.TideUtilities;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -12,8 +12,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.github.guikeller.jtide.models.TideType.FALLING;
-import static com.github.guikeller.jtide.models.TideType.RISING;
+import static com.github.jtides.models.TideType.FALLING;
+import static com.github.jtides.models.TideType.RISING;
 
 public class TideCalculator {
 

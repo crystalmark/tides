@@ -1,7 +1,7 @@
-package com.github.guikeller.jtide.services;
+package com.github.jtides.services;
 
-import com.github.guikeller.jtide.models.ConstSpeed;
-import com.github.guikeller.jtide.models.Constituents;
+import com.github.jtides.models.ConstSpeed;
+import com.github.jtides.models.Constituents;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;

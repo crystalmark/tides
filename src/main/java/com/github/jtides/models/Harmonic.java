@@ -1,4 +1,4 @@
-package com.github.guikeller.jtide.models;
+package com.github.jtides.models;
 
 public class Harmonic {
 
