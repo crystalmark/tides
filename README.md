@@ -1,7 +1,9 @@
 # Tide Calculator
 
-A simple Java API for calculating tide times for any date from 1970 onwards.  
+A simple Java API for calculating tide times for any date from 1970 onwards. 
+
 Based on harmonics from 2004, the calculated times and heights seems to be within 10 minutes of the main websites.
+
 The times and heights produced by this software should not be used for navigation.
 
 ## Build
@@ -19,6 +21,7 @@ mvn install:install-file -Dfile=target/jtide-0.0.1.jar -DgroupId=com.github.guik
 ## Contributing
 
 You might send through a PR, if well explained I will merge in.
+
 Otherwise, feel free to change the package name and make it your own.
 
 ## Example
@@ -125,12 +128,56 @@ public class DemoUsage {
 }
 ```
 
+## Output
+Tides for "Aba, Nagasaki, Japan" ( date: 13th of May 2021 )
+
+```log
+- - -
+#getHourlyTides
+value: 1.4160338406309354 / type: FALLING / time: 2021-05-13T00:00
+value: 1.0593295805457326 / type: null / time: 2021-05-13T01:00
+value: 0.9472243346611353 / type: null / time: 2021-05-13T02:00
+value: 1.1234888524531055 / type: LW / time: 2021-05-13T03:00
+value: 1.5484599856801293 / type: null / time: 2021-05-13T04:00
+value: 2.098801990782672 / type: null / time: 2021-05-13T05:00
+value: 2.6036313175538597 / type: null / time: 2021-05-13T06:00
+value: 2.9042747353176233 / type: null / time: 2021-05-13T07:00
+value: 2.9081374954183987 / type: null / time: 2021-05-13T08:00
+value: 2.611319683424369 / type: HW / time: 2021-05-13T09:00
+value: 2.0862407548668926 / type: null / time: 2021-05-13T10:00
+value: 1.4511633240157014 / type: null / time: 2021-05-13T11:00
+value: 0.8417258047292665 / type: null / time: 2021-05-13T12:00
+value: 0.39086702195567785 / type: null / time: 2021-05-13T13:00
+value: 0.2089387114058255 / type: null / time: 2021-05-13T14:00
+value: 0.3559938122303696 / type: LW / time: 2021-05-13T15:00
+value: 0.8130136042459453 / type: null / time: 2021-05-13T16:00
+value: 1.4722754823329631 / type: null / time: 2021-05-13T17:00
+value: 2.163127433547176 / type: null / time: 2021-05-13T18:00
+value: 2.7081212558523506 / type: null / time: 2021-05-13T19:00
+value: 2.9828427878643384 / type: null / time: 2021-05-13T20:00
+value: 2.9496273057371596 / type: HW / time: 2021-05-13T21:00
+value: 2.6536726117132727 / type: null / time: 2021-05-13T22:00
+value: 2.194172657716818 / type: null / time: 2021-05-13T23:00
+ 
+- - -
+#getTideHeightAtTimeAndPlace
+value: 0.9456539277660275 / type: LW / time: 2021-05-13T01:55
+value: 2.9455814602000903 / type: HW / time: 2021-05-13T07:32
+value: 0.2083019230732174 / type: LW / time: 2021-05-13T14:05
+value: 3.0055881051929414 / type: HW / time: 2021-05-13T20:24
+```
+
+Google: "tide Aba, Nagasaki, Japan" (and compare the results).
+
+PS: times and tides might be slightly off, if so adjust on the 'consumer' / 'client' side.
 
 ## Acknowledgments
 
 This is fork of "https://github.com/crystalmark/tides/" so all the credit should go to him.
+
 I just made it into a lib that others can use, tidied up a bit, and removed external deps.
 
 ## License
+
 MIT - Enjoy!
 
