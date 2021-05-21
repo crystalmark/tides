@@ -15,7 +15,7 @@ mvn clean package -DskipTests
 
 ## Install on to your maven repo
 ```bash
-mvn install:install-file -Dfile=target/jtides-0.0.2.jar -DgroupId=com.github -DartifactId=jtides -Dversion=0.0.2 -Dpackaging=jar
+mvn install:install-file -Dfile=target/jtides-0.0.3.jar -DgroupId=com.github -DartifactId=jtides -Dversion=0.0.3 -Dpackaging=jar
 ```
 
 ## Contributing
