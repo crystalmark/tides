@@ -143,9 +143,11 @@ public class TideUtilities {
         double value = 0d;
 
         LocalDateTime jan1st = LocalDate.of(date.getYear(), Month.JANUARY, 1).atStartOfDay();
+        TimeZone timeZone = TimeZone.getTimeZone(station.getTimeZone());
+        ZoneId zoneId = timeZone.toZoneId();
 
-        long d1 = date.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
-        long j1 = jan1st.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+        long d1 = date.atZone(zoneId).toInstant().toEpochMilli();
+        long j1 = jan1st.atZone(zoneId).toInstant().toEpochMilli();
 
         double stationBaseHeight = station.getBaseHeight();
         long nbSecSinceJan1st = (d1 - j1) / 1000L;

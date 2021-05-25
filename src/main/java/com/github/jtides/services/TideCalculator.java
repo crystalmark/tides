@@ -83,7 +83,11 @@ public class TideCalculator {
     }
 
     public List<TimedValue> getHighAndLowTides(String location, LocalDate day) throws Exception {
-        return getTides(location, day, 1).stream().filter(tide -> tide.getType() != null && (tide.getType().equals(TideType.HW) || tide.getType().equals(TideType.LW))).collect(Collectors.toList());
+        return getTides(location, day, 1).stream().filter(tide -> isLowOrHighTide(tide)).collect(Collectors.toList());
+    }
+
+    protected boolean isLowOrHighTide(TimedValue tide) {
+        return tide.getType() != null && (tide.getType().equals(TideType.HW) || tide.getType().equals(TideType.LW));
     }
 
 }
