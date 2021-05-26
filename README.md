@@ -25,7 +25,7 @@ mvn install:install-file -Dfile=target/jtides-0.0.3.jar -DgroupId=com.github -Da
 <dependency>
     <groupId>com.github</groupId>
     <artifactId>jtides</artifactId>
-    <version>0.0.2</version>
+    <version>0.0.3</version>
 </dependency>    
 ```
 
